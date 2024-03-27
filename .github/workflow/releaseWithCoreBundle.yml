@@ -1,0 +1,42 @@
+name: publish apex-node-bundle
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: 'Set the branch to use for release'
+        type: string
+        required: false
+        default: 'main'
+      module_name:
+        description: 'Identify which project is calling the workflow'
+        type: string
+        required: true
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: yarn
+      - name: Retrieve Scripts
+        run: |
+          git clone https://github.com/forcedotcom/bundle-publish-scripts.git
+      - name: Update for Publishing
+        run: |
+          node bundle-publish-scripts/updateForCoreBundle.js ${{ inputs.module_name }}
+      - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
+      - name: Build the Project
+        run: |
+          yarn build
+      - name: Publish a Package
+        run: |
+          npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
