@@ -29,7 +29,7 @@ jobs:
           git clone https://github.com/forcedotcom/bundle-publish-scripts.git
       - name: Update for Publishing
         run: |
-          node bundle-publish-scripts/updateForCoreBundle.js ${{ inputs.module_name }}
+          node bundle-publish-scripts/scripts/updateForCoreBundle.js ${{ inputs.module_name }}
       - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
       - name: Build the Project
         run: |
