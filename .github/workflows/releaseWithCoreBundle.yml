@@ -7,11 +7,6 @@ on:
         type: string
         required: false
         default: 'main'
-      module_name:
-        description: 'Identify which project is calling the workflow'
-        type: string
-        required: true
-        default: ''
 
 jobs:
   build:
