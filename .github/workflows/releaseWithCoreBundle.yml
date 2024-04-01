@@ -32,6 +32,6 @@ jobs:
       - name: Publish a Package
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN --verbose
-          npm publish --verbose
+          npm publish --access public --verbose
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
