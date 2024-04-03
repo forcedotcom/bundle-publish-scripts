@@ -6,6 +6,7 @@ const path = require('path');
 const packagePath = './package.json';
 const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 const packageName = packageJson.name;
+const isSdrUsed = packageJson?.dependencies["@salesforce/source-deploy-retrieve"]
 function updatePackageJson(packageJson) {
   try {
     // Update package name
@@ -25,11 +26,17 @@ function updatePackageJson(packageJson) {
       delete packageJson.dependencies["@salesforce/core"];
     }
 
+    // Update @salesforce/source-deploy-retrieve dependency
+    if (isSdrUsed) {
+      packageJson.dependencies["@salesforce/source-deploy-retrieve-bundle"] = packageJson.dependencies["@salesforce/source-deploy-retrieve"]
+      delete packageJson.dependencies["@salesforce/source-deploy-retrieve"];
+    }
+
     fs.writeFile(packagePath, JSON.stringify(packageJson, null, 2), 'utf8', (writeErr) => {
       if (writeErr) {
-      console.error(`Error writing to package.json: ${writeErr}`);
+        console.error(`Error writing to package.json: ${writeErr}`);
       } else {
-      console.log('package.json updated successfully.');
+        console.log('package.json updated successfully.');
       }
     });
   } catch (parseErr) {
@@ -37,7 +44,7 @@ function updatePackageJson(packageJson) {
   }
 }
 
-function updateCoreImports() {
+function updateImports() {
   const dirs = ['./src', './test'];
   function replaceTextInFile(filePath) {
     const data = fs.readFileSync(filePath, 'utf8');
@@ -49,6 +56,12 @@ function updateCoreImports() {
       /'@salesforce\/core\/(.+)'/g,
       "'@salesforce/core-bundle'"
     );
+    if (isSdrUsed) {
+      result = result.replace(
+        /'@salesforce\/source-deploy-retrieve/g,
+        "'@salesforce/source-deploy-retrieve-bundle"
+      );
+    }
     fs.writeFileSync(filePath, result, 'utf8');
   }
   function traverseDirectory(directory) {
@@ -69,7 +82,7 @@ function updateCoreImports() {
 
 function updateLoadMessages() {
   const dirs = ['./src', './test'];
-  console.log('1111', packageName);
+  console.log('packageName: ', packageName);
   const updateUsagesWithinFile = (filePath) => {
     let content = fs.readFileSync(filePath, 'utf8');
     const regex = new RegExp(`Messages\\.loadMessages\\('${packageName}'`, 'g');
@@ -93,5 +106,5 @@ function updateLoadMessages() {
 }
 
 updatePackageJson(packageJson);
-updateCoreImports();
+updateImports();
 updateLoadMessages();
