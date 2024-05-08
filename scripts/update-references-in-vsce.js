@@ -43,7 +43,7 @@ function updatePackageJson() {
           updated = true;
         }
         // Update bundling script
-        if (json.scripts && json.scripts["bundle:extension"]) {
+        if (json?.scripts?.["bundle:extension"]) {
           let bundlingScript = json.scripts["bundle:extension"];
           const newDep = referencesMap[oldDep];
           if (bundlingScript.includes(oldDep)) {
