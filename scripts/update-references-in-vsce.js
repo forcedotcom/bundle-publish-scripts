@@ -30,7 +30,7 @@ function updatePackageJson() {
       for (const oldDep in referencesMap) {
         const newDep = referencesMap[oldDep];
         // Update dependencies 
-        if (json.dependencies && json.dependencies[oldDep]) {
+        if (json?.dependencies?.[oldDep]) {
           json.dependencies[newDep] = json.dependencies[oldDep].startsWith('^') ? json.dependencies[oldDep] : '^' + json.dependencies[oldDep];
           delete json.dependencies[oldDep];
           updated = true;
