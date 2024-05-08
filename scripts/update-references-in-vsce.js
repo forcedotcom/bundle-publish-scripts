@@ -37,7 +37,7 @@ function updatePackageJson() {
         }
         // Update packaging dependencies
         const packagingDeps = json?.packaging?.packageUpdates?.dependencies;
-        if (packagingDeps && packagingDeps[oldDep]) {
+        if (packagingDeps?.[oldDep]) {
           packagingDeps[newDep] = packagingDeps[oldDep].startsWith('^') ? packagingDeps[oldDep] : '^' + packagingDeps[oldDep];
           delete packagingDeps[oldDep];
           updated = true;
