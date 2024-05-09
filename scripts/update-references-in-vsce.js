@@ -29,8 +29,8 @@ function traverseDirectories(directory, targetName, callback) {
     });
   });
 }
-
-function updateReferenceNames(data) {
+function replaceTextInFile(filePath) {
+  const data = fs.readFileSync(filePath, 'utf8');
   let result = data.replace(
     /'@salesforce\/core'/g,
     "'@salesforce/core-bundle'"
@@ -55,8 +55,9 @@ function updateReferenceNames(data) {
     /'@salesforce\/apex-node/g,
     "'@salesforce/apex-node-bundle"
   );
-  return result;
+  fs.writeFileSync(filePath, result, 'utf8');
 }
+
 // Update the references in package.json
 function updatePackageJson() {
   // Function to update dependencies in package.json
@@ -107,12 +108,6 @@ function updatePackageJson() {
 }
 
 function updateImports() {
-  const dirs = ['src', 'test'];
-  function replaceTextInFile(filePath) {
-    const data = fs.readFileSync(filePath, 'utf8');
-    const result = updateReferenceNames(data);
-    fs.writeFileSync(filePath, result, 'utf8');
-  }
   function traverseDirectory(directory) {
     fs.readdirSync(directory).forEach((file) => {
       const fullPath = path.join(directory, file);
@@ -124,37 +119,12 @@ function updateImports() {
     });
   }
 
-  function traversePackages(directory) {
-    fs.readdir(directory, { withFileTypes: true }, (err, files) => {
-      if (err) {
-        console.error(`Error reading directory ${directory}: ${err}`);
-        return;
-      }
-
-      files.forEach(file => {
-        if (file.isDirectory()) {
-          dirs.forEach((dir) => {
-            const tsDirPath = path.join(directory, file.name, dir);
-            if (fs.existsSync(tsDirPath)) {
-              traverseDirectory(tsDirPath)
-            }
-          });
-        }
-      });
-    });
-  }
-  traversePackages(packagesDir);
+  traverseDirectory(packagesDir);
   console.log('imports updated successfully');
 }
 
 // Update the references in esbuild.config.js
 function updateEsbuildConfig() {
-  function replaceTextInFile(filePath) {
-    const data = fs.readFileSync(filePath, 'utf8');
-    const result = updateReferenceNames(data);
-    fs.writeFileSync(filePath, result, 'utf8');
-  }
-
   // Start traversing from the packages directory
   traverseDirectories(packagesDir, 'esbuild.config.js', replaceTextInFile);
 }
