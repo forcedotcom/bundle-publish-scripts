@@ -131,4 +131,4 @@ function updateEsbuildConfig() {
 
 updatePackageJson();
 updateImports();
-updateEsbuildConfig();
+// updateEsbuildConfig();
