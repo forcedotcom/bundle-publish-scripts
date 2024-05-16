@@ -84,9 +84,14 @@ function updatePackageJson() {
         // Update packaging dependencies
         const packagingDeps = json?.packaging?.packageUpdates?.dependencies;
         if (packagingDeps?.[oldDep]) {
-          packagingDeps[newDep] = packagingDeps[oldDep].startsWith('^') ? packagingDeps[oldDep] : '^' + packagingDeps[oldDep];
-          delete packagingDeps[oldDep];
-          updated = true;
+          if(oldDep.includes('templates')) {
+            packagingDeps[newDep] = packagingDeps[oldDep].startsWith('^') ? packagingDeps[oldDep] : '^' + packagingDeps[oldDep];
+            delete packagingDeps[oldDep];
+            updated = true;
+          } else {
+            delete packagingDeps[oldDep];
+            updated = true;
+          }
         }
       }
 
