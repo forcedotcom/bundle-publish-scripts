@@ -1,0 +1,31 @@
+name: Build project with core-bundle
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: "Set the branch to use for release"
+        type: string
+        required: false
+        default: "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: yarn
+      - name: Retrieve Scripts
+        run: |
+          git clone https://github.com/forcedotcom/bundle-publish-scripts.git
+      - name: Update for core bundle
+        run: |
+          node bundle-publish-scripts/scripts/updateForCoreBundle.js
+      - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
+      - name: Build the Project
+        run: |
+          yarn build
