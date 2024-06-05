@@ -15,20 +15,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: yarn
-      - name: Retrieve Scripts
-        run: |
-          git clone https://github.com/forcedotcom/bundle-publish-scripts.git
-      - name: Update for Publishing
-        run: |
-          node bundle-publish-scripts/scripts/updateForCoreBundle.js
-      - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
-      - name: Build the Project
-        run: |
-          yarn build
+      - name: Build with core-bundle
+        uses: forcedotcom/bundle-publish-scripts/.github/actions/buildWithCoreBundle@main
       - name: Publish a Package
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN --verbose
