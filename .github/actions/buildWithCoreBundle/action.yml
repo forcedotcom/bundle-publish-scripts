@@ -10,10 +10,13 @@ runs:
     - name: Retrieve Scripts
       run: |
         git clone https://github.com/forcedotcom/bundle-publish-scripts.git
+      shell: bash
     - name: Update for Publishing
       run: |
         node bundle-publish-scripts/scripts/updateForCoreBundle.js
+      shell: bash
     - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
     - name: Build the Project
       run: |
         yarn build
+      shell: bash

@@ -20,6 +20,9 @@ jobs:
         run: |
           node bundle-publish-scripts/scripts/updateForCoreBundle.js
       - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
+      - name: Run Build within the Project
+        run: |
+          yarn build
       - name: Run Tests within the Project
         run: |
           yarn test
