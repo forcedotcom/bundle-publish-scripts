@@ -9,17 +9,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: yarn
-      - name: Retrieve Scripts
+      - name: Build with core-bundle
+        uses: forcedotcom/bundle-publish-scripts/.github/actions/buildWithCoreBundle@main
+      - name: Run Tests within the Project
         run: |
-          git clone https://github.com/forcedotcom/bundle-publish-scripts.git
-      - name: Update for Publishing
-        run: |
-          node bundle-publish-scripts/scripts/updateForCoreBundle.js
-      - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
-      - name: Run Build within the Project
-        run: |
-          yarn build
+          yarn test
+        continue-on-error: true

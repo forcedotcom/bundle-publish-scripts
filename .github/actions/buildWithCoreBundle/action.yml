@@ -1,0 +1,19 @@
+name: build-with-core-bundle
+description: build projects with core bundle
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: yarn
+    - name: Retrieve Scripts
+      run: |
+        git clone https://github.com/forcedotcom/bundle-publish-scripts.git
+    - name: Update for Publishing
+      run: |
+        node bundle-publish-scripts/scripts/updateForCoreBundle.js
+    - uses: salesforcecli/github-workflows/.github/actions/yarnInstallWithRetries@main
+    - name: Build the Project
+      run: |
+        yarn build
