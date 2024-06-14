@@ -16,7 +16,8 @@ const sharedConfig = {
   external: [
     'vscode',
     // '@salesforce/core-bundle',
-    'applicationinsights'
+    'applicationinsights',
+    'jsonpath'
   ],
   minify: true,
   keepNames: true,

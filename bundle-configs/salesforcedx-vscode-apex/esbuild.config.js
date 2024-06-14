@@ -17,7 +17,8 @@ const sharedConfig = {
     'vscode',
     // '@salesforce/core-bundle',
     'applicationinsights',
-    'shelljs'
+    'shelljs',
+    'jsonpath'
     // '@salesforce/source-deploy-retrieve-bundle',
     // '@salesforce/source-tracking-bundle'
   ],
