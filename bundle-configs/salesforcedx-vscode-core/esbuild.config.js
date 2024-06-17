@@ -17,9 +17,7 @@ const sharedConfig = {
     'applicationinsights',
     'shelljs',
     '@salesforce/core-bundle',
-    // '@salesforce/source-tracking-bundle',
     '@salesforce/templates-bundle'
-    // '@salesforce/source-deploy-retrieve-bundle'
   ],
   minify: true
 };
