@@ -15,12 +15,9 @@ const sharedConfig = {
   platform: 'node',
   external: [
     'vscode',
-    // '@salesforce/core-bundle',
     'applicationinsights',
     'shelljs',
     'jsonpath'
-    // '@salesforce/source-deploy-retrieve-bundle',
-    // '@salesforce/source-tracking-bundle'
   ],
   keepNames: true,
   plugins: [

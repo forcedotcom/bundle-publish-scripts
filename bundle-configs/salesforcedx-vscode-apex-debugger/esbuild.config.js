@@ -18,8 +18,6 @@ const sharedConfig = {
   keepNames: true,                  // keepNames to get rid of
   external: [
     'vscode'
-    // '@salesforce/core-bundle'
-    // '@salesforce/source-tracking-bundle'
   ],
   plugins: [
     esbuildPluginPino({ transports: ['pino-pretty'] })
