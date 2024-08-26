@@ -3,21 +3,44 @@ on:
   workflow_call:
     inputs:
       branch:
-        description: 'Set the branch to use for release'
+        description: "Set the branch to use for release"
         type: string
         required: false
-        default: 'main'
+        default: "main"
+      packageName:
+        description: "The name of the package to publish"
+        type: string
+        required: true
+      packageVersion:
+        description: "The version of the package to publish"
+        type: string
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      skip_publish: ${{ steps.check-version.outputs.skip_publish }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout to external repo
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
+
       - name: Build with core-bundle
         uses: forcedotcom/bundle-publish-scripts/.github/actions/buildWithCoreBundle@main
+
+      - name: Check if version exists on npm
+        id: check-version
+        run: |
+          if npm view "${{ inputs.packageName }}@${{ inputs.packageVersion }}" > /dev/null 2>&1; then
+            echo "Version ${{ inputs.packageVersion }} of ${{ inputs.packageName }} already exists. Skipping publish."
+            echo "skip_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip_publish=false" >> $GITHUB_OUTPUT
+
       - name: Publish a Package
+        if: steps.check-version.outputs.skip_publish == 'false'
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN --verbose
           npm publish --verbose
