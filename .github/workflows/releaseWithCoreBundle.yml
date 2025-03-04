@@ -7,6 +7,11 @@ on:
         type: string
         required: false
         default: 'main'
+      tag:
+        required: false
+        type: string
+        default: 'latest'
+        description: "tag to publish under, default: latest"
 
 jobs:
   build:
@@ -20,6 +25,6 @@ jobs:
       - name: Publish a Package
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN --verbose
-          npm publish --verbose
+          npm publish --verbose --tag ${{ inputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
